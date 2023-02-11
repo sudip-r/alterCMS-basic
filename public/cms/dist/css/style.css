@@ -1,0 +1,66 @@
+.user-img{
+  width:32px;
+  height: 32px;
+}
+
+.user-image-circle{
+  display:inline;
+}
+
+.img-circle-form{
+  height: 100%;
+  width: 100%;
+  border-radius: unset !important;
+}
+
+.img-body{
+  text-align: center;
+}
+
+.custom-file{
+  margin-top: 10px;
+}
+
+.icon-img{
+  width: 150px;
+}
+
+.action-form{
+  display:inline;
+}
+
+.pull-right{
+  float:right;
+}
+
+.pull-left{
+  float:left;
+}
+
+.cover-image{
+  width:100%;
+}
+
+.profile-image-abs{
+  position: absolute;
+  top: 100px;
+  background: #FFFFFF;
+  border-radius: 100px;
+  left: 30px;
+}
+
+.profile-img{
+  max-width: 120px;
+}
+
+.editor-box{
+  height:360px;
+}
+
+@media only screen and (max-width: 768px) {
+  .alter-table{
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+}
