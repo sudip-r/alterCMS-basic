@@ -10,54 +10,75 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    /**
-     * The path to the "home" route for your application.
-     *
-     * This is used by Laravel authentication to redirect users after login.
-     *
-     * @var string
-     */
-    public const HOME = '/home';
+  /**
+   * The path to the "home" route for your application.
+   *
+   * This is used by Laravel authentication to redirect users after login.
+   *
+   * @var string
+   */
+  public const HOME = '/alter-admin/dashboard';
 
-    /**
-     * The controller namespace for the application.
-     *
-     * When present, controller route declarations will automatically be prefixed with this namespace.
-     *
-     * @var string|null
-     */
-    // protected $namespace = 'App\\Http\\Controllers';
+  /**
+   * The controller namespace for the application.
+   *
+   * When present, controller route declarations will automatically be prefixed with this namespace.
+   *
+   * @var string|null
+   */
+  protected $namespace = 'App\\Http\\Controllers';
 
-    /**
-     * Define your route model bindings, pattern filters, etc.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->configureRateLimiting();
+  /**
+   * Define your route model bindings, pattern filters, etc.
+   *
+   * @return void
+   */
+  public function boot()
+  {
+    parent::boot();
 
-        $this->routes(function () {
-            Route::prefix('api')
-                ->middleware('api')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/api.php'));
+    $this->configureRateLimiting();
 
-            Route::middleware('web')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/web.php'));
-        });
-    }
+    $this->routes(function () {
+      Route::prefix('api')
+        ->middleware('api')
+        ->namespace($this->namespace)
+        ->group(base_path('routes/api.php'));
 
-    /**
-     * Configure the rate limiters for the application.
-     *
-     * @return void
-     */
-    protected function configureRateLimiting()
-    {
-        RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
-        });
-    }
+      Route::middleware('web')
+        ->namespace($this->namespace)
+        ->group(base_path('routes/web.php'));
+
+      Route::prefix('alter-admin')
+        ->as('cms::')
+        ->middleware(['web', 'auth:web'])
+        ->namespace('App\Http\Controllers\alterCMS')
+        ->group(base_path('routes/cms.php'));
+
+      Route::prefix('business')
+        ->as('business::')
+        ->middleware(['web', 'auth:business'])
+        ->namespace('App\Http\Controllers\Business')
+        ->group(base_path('routes/business.php'));
+
+      Route::prefix('client')
+        ->as('client::')
+        ->middleware(['web', 'auth:client'])
+        ->namespace('App\Http\Controllers\Client')
+        ->group(base_path('routes/client.php'));
+
+    });
+  }
+
+  /**
+   * Configure the rate limiters for the application.
+   *
+   * @return void
+   */
+  protected function configureRateLimiting()
+  {
+    RateLimiter::for('api', function (Request $request) {
+      return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
+    });
+  }
 }

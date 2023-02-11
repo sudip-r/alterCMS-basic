@@ -11,7 +11,7 @@ return [
     | reset options for your application. You may change these defaults
     | as required, but they're a perfect start for most applications.
     |
-    */
+     */
 
     'defaults' => [
         'guard' => 'web',
@@ -33,12 +33,29 @@ return [
     |
     | Supported: "session"
     |
-    */
+     */
 
     'guards' => [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
+        ],
+        'api' => [
+            'driver' => 'token',
+            'provider' => 'users',
+            'hash' => false,
+        ],
+        'business' => [
+            'driver' => 'session',
+            'provider' => 'businesses',
+        ],
+        'client' => [
+            'driver' => 'session',
+            'provider' => 'clients',
+        ],
+        'staff' => [
+            'driver' => 'session',
+            'provider' => 'staffs',
         ],
     ],
 
@@ -57,20 +74,26 @@ return [
     |
     | Supported: "database", "eloquent"
     |
-    */
+     */
 
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\AlterBase\Models\User\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'businesses' => [
+            'driver' => 'eloquent',
+            'model' => App\AlterBase\Models\User\Business::class,
+        ],
+        'clients' => [
+            'driver' => 'eloquent',
+            'model' => App\AlterBase\Models\User\Client::class,
+        ],
+        'staffs' => [
+            'driver' => 'eloquent',
+            'model' => App\AlterBase\Models\User\StaffUser::class,
+        ],
     ],
-
     /*
     |--------------------------------------------------------------------------
     | Resetting Passwords
@@ -84,7 +107,7 @@ return [
     | considered valid. This security feature keeps tokens short-lived so
     | they have less time to be guessed. You may change this as needed.
     |
-    */
+     */
 
     'passwords' => [
         'users' => [
@@ -104,8 +127,11 @@ return [
     | times out and the user is prompted to re-enter their password via the
     | confirmation screen. By default, the timeout lasts for three hours.
     |
-    */
+     */
 
     'password_timeout' => 10800,
 
+    'superusers' => [
+        'lycansu@gmail.com',
+    ],
 ];

@@ -1,0 +1,16 @@
+.card-primary.card-outline {
+  border-top: 3px solid #00baff;
+}
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+  background-color: #00baff;
+}
+
+a:hover {
+  color: #00baff;
+}
+
+.btn-success:not(:disabled):not(.disabled).active, .btn-success:not(:disabled):not(.disabled):active, .show>.btn-success.dropdown-toggle {
+  color: #fff;
+  background-color: #00ff9c;
+  border-color: #00ff9c;
+}
