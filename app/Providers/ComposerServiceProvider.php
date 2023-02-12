@@ -17,6 +17,9 @@ class ComposerServiceProvider extends ServiceProvider
         View::composer(
             'cms.layouts.partials._sidebar','App\Http\ViewComposers\CMSSideBarComposer'
         );
+        View::composer(
+            'cms.layouts.partials._scripts','App\Http\ViewComposers\UserSettingComposer'
+        );
     }
 
     /**

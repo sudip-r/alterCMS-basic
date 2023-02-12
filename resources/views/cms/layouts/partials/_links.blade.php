@@ -20,3 +20,5 @@
 <link rel="stylesheet" href="{!! asset('cms/plugins/summernote/summernote-bs4.min.css') !!}">
 
 <link rel="stylesheet" href="{!! asset('cms/dist/css/style.css') !!}">
+
+<link rel="icon" type="image/png" href="{!! asset('cms/dist/img/favicon.png') !!}">

@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,5 +20,15 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+
+Route::get('logout', function () {
+  Auth::guard('web')->logout();
+  Auth::guard('business')->logout();
+  Auth::guard('client')->logout();
+  Auth::logout();
+  return back();
+})->name('logout');
+
+Route::post('/login/user', [App\Http\Controllers\Auth\LoginController::class, 'alterLogin'])->name('post.alter.login');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

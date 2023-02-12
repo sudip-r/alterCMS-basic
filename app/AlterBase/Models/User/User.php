@@ -103,4 +103,29 @@ class User extends Authenticatable
   {
     return $this->belongsToMany(Role::class, 'user_role');
   }
+
+  /**
+   * Get user profile
+   * 
+   * @return Collection
+   */
+  public function profile()
+  {
+    return $this->from('users as u')
+                ->join('user_profile as p', 'p.user_id', 'u.id')
+                ->where('u.id', $this->id)
+                ->select(['p.name', 'p.address', 'p.contact'])
+                ->get()
+                ->first();
+  }
+
+  /**
+   * Get user setting
+   * 
+   * @return \Illuminate\Database\Eloquent\Relations\HasOne
+   */
+  public function setting()
+  {
+    return $this->hasOne(UserSetting::class, 'user_id', 'id');
+  }
 }

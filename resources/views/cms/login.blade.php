@@ -9,6 +9,15 @@
   <link rel="stylesheet" href="{!! asset('cms/plugins/fontawesome-free/css/all.min.css') !!}">
   <link rel="stylesheet" href="{!! asset('cms/plugins/icheck-bootstrap/icheck-bootstrap.min.css') !!}">
   <link rel="stylesheet" href="{!! asset('cms/dist/css/adminlte.min.css') !!}">
+  <link rel="stylesheet" href="{!! asset('cms/dist/css/style.css') !!}">
+  <link rel="icon" type="image/png" href="{!! asset('cms/dist/img/favicon.png') !!}">
+
+  <style>
+    body{
+      background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('{{asset("cms/dist/img/bg/".rand(1,14).".jpg")}}') center center no-repeat;
+      background-size: cover;
+    }
+  </style>
 </head>
 <body class="hold-transition login-page">
 

@@ -47,28 +47,37 @@
             <td>{!! $user->id !!}</td>
             <td>
               <div class="widget-user-image user-image-circle">
-                <img class="img-circle user-img" src="{!! asset('uploads/users/'.$user->profile_image) !!}" alt="{!! $user->name !!}">
+                @php 
+                  $profileImage = asset('uploads/users/'.$user->profile_image)
+                @endphp
+
+                @if(!file_exists(public_path('uploads/users/'.$user->profile_image)))
+                  @php 
+                    $profileImage = asset('cms/dist/img/user.png')
+                  @endphp
+                @endif
+                <img class="img-circle user-img" src="{!! $profileImage !!}" alt="{!! $user->name !!}">
               </div><span class="media-heading user-title">{!! $user->name !!}</span>
             </td>
             <td>
               @if($user->isSuperuser())
-              <span class="label label-success">Super Admin</span>
+              <span class="bg-success color-palette __p10">Super Admin</span>
               @endif
               @foreach($user->roles as $role)
-              <span class="label label-primary">{!! $role->name !!}</span>
+              <span class="bg-info color-palette __p10">{!! $role->name !!}</span>
               @endforeach
             </td>
             <td>{!! $user->email !!}</td>
             <td>
               @if($user->active)
-              <span class="label label-success">Active</span>
+              <span class="bg-success color-palette __p10">Active</span>
               @else
-              <span class="label label-danger">In-Active</span>
+              <span class="bg-danger color-palette __p10">Inactive</span>
               @endif
               @if($user->verified)
-              <span class="label label-success">Verified</span>
+              <span class="bg-success color-palette __p10">Verified</span>
               @else
-              <span class="label label-danger">Not Verified</span>
+              <span class="bg-warning color-palette __p10">Not Verified</span>
               @endif
             </td>
             <td>

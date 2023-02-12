@@ -7,7 +7,6 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\AlterBase\Models\User\User;
 
 class LoginController extends Controller
 {
@@ -42,6 +41,12 @@ class LoginController extends Controller
     $this->middleware('guest:client')->except('logout');
   }
 
+  /**
+   * Login
+   * 
+   * @param Request $request
+   * @return Redirect
+   */
   public function alterLogin(Request $request)
   {
     $this->validate($request, [

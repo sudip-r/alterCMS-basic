@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Dashboard</title>
+  <title>alterCMS v1 | Dashboard</title>
 
   @include('cms.layouts.partials._links')
 </head>
@@ -11,9 +11,11 @@
 <div class="wrapper">
 
   <!-- Preloader -->
-  <div class="preloader">
-    <img src="{!! asset('cms/dist/img/AdminLTELogo.png') !!}" alt="AdminLTELogo" height="60" width="60">
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="fa-spin" src="{!! asset('cms/dist/img/AdminLTELogo.png') !!}" alt="AdminLTELogo" height="60" width="60">
   </div>
+
+  @include('cms.layouts.partials._header')
 
   @include('cms.layouts.partials._sidebar')
 

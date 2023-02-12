@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\alterCMS\API\APIController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,10 +23,17 @@ $router->get('/', 'HomeController@index')->name('dashboard');
 
 $router->get('dashboard', 'HomeController@index')->name('adminDashboard');
 
+$router->get('logger', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+
 $router->get('logout', function () {
   Auth::logout();
   return back();
 })->name('logout');
+
+/* ==================================================================================
+                            API
+===================================================================================*/
+$router->post('/update-dark-mode', [APIController::class, 'toggleDarkMode'])->name('toggle.dark-mode');
 
 /* ==================================================================================
                         Role Module
@@ -40,9 +49,9 @@ $router->get('user/role/edit/{role}', 'User\RoleController@edit')->name('users.r
 
 $router->patch('user/role/update/{role}', 'User\RoleController@update')->name('users.roles.update');
 
-$router->get('user/role/permissions/{role}', 'User\RoleController@permissions')->name('users.roles.permissions');
+$router->get('user/roles/permissions/{role}', 'User\RoleController@permissions')->name('users.roles.permissions');
 
-$router->post('user/role/permission/update/{role}', 'User\RoleController@updatePermissions')->name('users.roles.permissions.update');
+$router->post('user/roles/permission/update/{role}', 'User\RoleController@updatePermissions')->name('users.roles.permissions.update');
 
 /* ==================================================================================
                         User Module
@@ -65,14 +74,14 @@ $router->get('user/verification/check/{token}', 'User\UserController@verify')->n
                         Category Module
  ====================================================================================*/
 
- $router->get('categories', 'Category\CategoryController@index')->name('categories.index');
+//  $router->get('categories', 'Category\CategoryController@index')->name('categories.index');
 
-$router->get('categories/add', 'Category\CategoryController@create')->name('categories.create');
+// $router->get('categories/add', 'Category\CategoryController@create')->name('categories.create');
 
-$router->get('categories/edit/{category}', 'Category\CategoryController@edit')->name('categories.edit');
+// $router->get('categories/edit/{category}', 'Category\CategoryController@edit')->name('categories.edit');
 
-$router->delete('categories/delete/{category}', 'Category\CategoryController@delete')->name('categories.delete');
+// $router->delete('categories/delete/{category}', 'Category\CategoryController@delete')->name('categories.delete');
 
-$router->patch('categories/update/{category}', 'Category\CategoryController@update')->name('categories.update');
+// $router->patch('categories/update/{category}', 'Category\CategoryController@update')->name('categories.update');
 
-$router->post('categories/store','Category\CategoryController@store')->name('categories.store');
+// $router->post('categories/store','Category\CategoryController@store')->name('categories.store');

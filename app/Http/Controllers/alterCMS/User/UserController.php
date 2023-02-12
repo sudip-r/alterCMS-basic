@@ -10,8 +10,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
 use Psr\Log\LoggerInterface;
-use Collective\Html\HtmlServiceProvider;
+
 /**
  * Class UserController
  * @package App\Http\Controllers\CMS
@@ -47,7 +48,7 @@ class UserController extends Controller
      * @param LoggerInterface $log
      * @param DatabaseManager $db
      */
-    public function __construct(UserRepository $user,RoleRepository $role,UserVerification $userVerification,LoggerInterface $log,DatabaseManager $db)
+    public function __construct(UserRepository $user, RoleRepository $role, UserVerification $userVerification, LoggerInterface $log, DatabaseManager $db)
     {
         $this->user = $user;
         $this->userVerification = $userVerification;
@@ -63,12 +64,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        $this->authorize('view',User::class);
+        $this->authorize('view', User::class);
 
         $users = $this->user->paginate(50);
 
         return view('cms.users.index')
-            ->with('users',$users);
+            ->with('users', $users);
     }
 
     /**
@@ -78,12 +79,12 @@ class UserController extends Controller
      */
     public function create()
     {
-        $this->authorize('create',User::class);
+        $this->authorize('create', User::class);
         $roles = $this->role->all();
 
         return view('cms.users.create')
-            ->with('roles',$roles)
-            ->with('assignedRoles',[]);
+            ->with('roles', $roles)
+            ->with('assignedRoles', []);
     }
 
     /**
@@ -94,21 +95,21 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        $this->authorize('create',User::class);
+        $this->authorize('create', User::class);
 
-        try{
+        try {
             $this->db->beginTransaction();
 
             $input = $request->only([
-                'name','email','password'
+                'name', 'email', 'password',
             ]);
 
             $input['active'] = false;
-            if($request->active){
+            if ($request->active) {
                 $input['active'] = true;
             }
 
-            if($request->hasFile('profile_image')){
+            if ($request->hasFile('profile_image')) {
                 $input['profile_image'] = $this->uploadImage($request);
             }
             $input['verified'] = true;
@@ -116,19 +117,19 @@ class UserController extends Controller
 
             $user->roles()->sync($request->roles);
 
-           // $this->userVerification->sendVerificationEmail($user);
+            // $this->userVerification->sendVerificationEmail($user);
 
             $this->db->commit();
 
             return redirect()->route('cms::users.index')
-                ->with('success',"User created successfully.");
+                ->with('success', "User created successfully.");
 
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->db->rollback();
             $this->log->error((string) $e);
 
             return redirect()->route('cms::users.create')
-                ->with('error',"Failed to add user. ".$e->getMessage())
+                ->with('error', "Failed to add user. " . $e->getMessage())
                 ->withInput();
         }
 
@@ -142,14 +143,14 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $this->authorize('update',User::class);
+        $this->authorize('update', User::class);
 
         $roles = $this->role->all();
         $assignedRoles = $user->roles->pluck('id')->toArray();
 
-        return view('cms.users.edit')->with('user',$user)
-            ->with('roles',$roles)
-            ->with('assignedRoles',$assignedRoles);
+        return view('cms.users.edit')->with('user', $user)
+            ->with('roles', $roles)
+            ->with('assignedRoles', $assignedRoles);
     }
 
     /**
@@ -161,25 +162,33 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, $id)
     {
-        $this->authorize('update',User::class);
+        $this->authorize('update', User::class);
 
-        try{
+        $user = $this->user->find($id);
+
+        try {
             $this->db->beginTransaction();
 
             $input = $request->only([
-                'name','email'
+                'name', 'email',
             ]);
 
-            if($request->hasFile('profile_image')){
-                $input['profile_image'] = $this->uploadImage($request);
+            $input['active'] = false;
+            if ($request->active) {
+                $input['active'] = true;
             }
 
-            if($request->password){
+            if ($request->hasFile('profile_image')) {
+                $input['profile_image'] = $this->uploadImage($request);
+
+                $this->deleteOldProfileImage($user->profile_image);
+            }
+
+            if ($request->password) {
                 $input['password'] = $request->password;
             }
 
-            $this->user->update($id,$input);
-            $user = $this->user->find($id);
+            $this->user->update($id, $input);
 
             $user->roles()->sync($request->roles);
 //            $this->userVerification->sendVerificationEmail($user);
@@ -187,14 +196,14 @@ class UserController extends Controller
             $this->db->commit();
 
             return redirect()->route('cms::users.index')
-                ->with('success','User updated successfully.');
+                ->with('success', 'User updated successfully.');
 
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->db->rollback();
             $this->log->error((string) $e);
 
-            return redirect()->route('cms::users.edit',['user'=> $user->id])
-                ->with('error','Filed to update user.')
+            return redirect()->route('cms::users.index')
+                ->with('error', 'Filed to update user.')
                 ->withInput();
         }
     }
@@ -206,21 +215,21 @@ class UserController extends Controller
      * @param $token
      * @return string
      */
-    public function verify(Request $request,$token)
+    public function verify(Request $request, $token)
     {
-        try{
-            if($request->email){
-                $this->userVerification->verifyToken($request->email,$token);
+        try {
+            if ($request->email) {
+                $this->userVerification->verifyToken($request->email, $token);
 
-                return redirect()->route('login')->with('success',"You are verified");
+                return redirect()->route('login')->with('success', "You are verified");
             }
 
             return "Invalid verification request.";
 
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->log->error((string) $e);
 
-            return "Failed to verify.".$e->getMessage();
+            return "Failed to verify." . $e->getMessage();
         }
     }
 
@@ -233,11 +242,41 @@ class UserController extends Controller
     private function uploadImage($request)
     {
         $image = $request->file('profile_image');
-        $filename = time() . '.' . $image->getClientOriginalExtension();
+        $filename = rand(1, 1000000) . time() . '.' . $image->getClientOriginalExtension();
+
+        $width = 256;
+        $height = 256;
 
         $destinationPath = public_path('uploads/users/');
+
         $image->move($destinationPath, $filename);
 
+        $filePath = $destinationPath . $filename;
+
+        Image::make($filePath)
+            ->fit($width, $height, function ($constraint) {
+                $constraint->upsize();
+            })
+            ->save($destinationPath . $filename);
+
         return $filename;
+    }
+
+    /**
+     * Delete old image
+     *
+     * @param $image
+     * @return Boolean
+     */
+    private function deleteOldProfileImage($image)
+    {
+        $path = public_path('uploads/users/');
+
+        if (file_exists($path . $image)) {
+            unlink($path . $image);
+        } else {
+            return false;
+        }
+        return true;
     }
 }

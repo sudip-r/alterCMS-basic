@@ -17,8 +17,8 @@
             </div>
 
             <div class="form-group">
-                {!! Form::label('password-confirm','Confirm Password') !!}
-                {!! Form::password('password_confirmation',['class' => 'form-control', 'id' => 'confirm-password', 'placeholder' => "Confirm Password" ]) !!}
+                {!! Form::label('password_confirmation','Confirm Password') !!}
+                {!! Form::password('password_confirmation',['class' => 'form-control', 'id' => 'password_confirmation', 'placeholder' => "Confirm Password" ]) !!}
             </div>
 
         </div>
@@ -83,16 +83,21 @@
         <div class="card-body">
             <!-- Minimal style -->
 
-            <!-- radio -->
             <div class="form-group">
-                <div class="radio">
-                    <label>
-                        {!! Form::radio('active',null) !!}
-                        <span class="circle"></span>
-                        <span class="check"></span>
-                        Active
-                    </label>
-                </div>
+                <div class="switch-box">
+                  <span class="switch-label">Active</span>
+          
+                      <label class="switch">
+                          {{ Form::hidden('active', false) }}
+          
+                          @if(isset($user) && $user->active == '1' || old('active'))
+                              <input type="checkbox" name="active" checked>
+                          @else
+                              <input type="checkbox" name="active">
+                          @endif
+                          <span class="slider round"></span>
+                      </label>
+                  </div>
             </div>
 
 
@@ -113,12 +118,14 @@
         </div>
         <div class="card-body img-body">
             <!-- Minimal style -->
-            @if(isset($user) && $user->image)
+            @if(isset($user) && $user->profile_image && $user->profile_image != "user.png")
                 <div class="widget-user-image">
-                    <img id="featured-img-tag" class="featured-img-tag img-circle-form" src="{!! asset('uploads/users/'.$user->image) !!}" alt="{!! $user->name !!}">
+                    <img id="featured-img-tag" class="featured-img-tag img-circle-form" src="{!! asset('uploads/users/'.$user->profile_image) !!}" alt="{!! $user->name !!}">
                 </div>
             @else 
-              <img id="featured-img-tag" class="img-circle-form" src="{!! asset('uploads/users/user.png') !!}">
+            <div class="widget-user-image">
+              <img id="featured-img-tag" class="img-circle-form" src="{!! asset('cms/dist/img/user.png') !!}">
+            </div>
             @endif
             <div class="form-group">
                 <div class="custom-file">

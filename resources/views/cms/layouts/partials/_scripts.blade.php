@@ -32,6 +32,35 @@
 @yield('custom-scripts')
 
 <script>
+
+  $(document).ready(function(){
+    var dark_mode = '{{$setting->dark_mode}}';
+    if(dark_mode == '1')
+    {
+      turnOffTheLight();
+    }else{
+      turnOnTheLight();
+    }
+  });
+
+  function turnOffTheLight()
+  {
+    $('body').addClass('dark-mode');
+    $('.main-header').addClass('navbar-dark');
+    $('.main-header').removeClass('navbar-white');
+    $('.main-sidebar').removeClass('sidebar-light-info');
+    $('.main-sidebar').addClass('sidebar-dark-info');
+  }
+
+  function turnOnTheLight()
+  {
+    $('body').removeClass('dark-mode');
+    $('.main-header').addClass('navbar-white');
+    $('.main-header').removeClass('navbar-dark');
+    $('.main-sidebar').addClass('sidebar-light-info');
+    $('.main-sidebar').removeClass('sidebar-dark-info');
+  }
+
   function readURL(input, divId = "featured-img-tag") {
     if (input.files && input.files[0]) {
       var reader = new FileReader();
@@ -52,4 +81,34 @@
   $("#icon-dark").change(function() {
     readURL(this, "icon-dark-img");
   });
+
+  $(".__lights_toggle").click(function(){
+    var dark_mode = 0;
+    if($('body').hasClass('dark-mode'))
+    {
+      $('body').removeClass('dark-mode');
+      $('.main-header').addClass('navbar-white');
+      $('.main-header').removeClass('navbar-dark');
+      $('.main-sidebar').addClass('sidebar-light-info');
+      $('.main-sidebar').removeClass('sidebar-dark-info');
+      dark_mode = 0;
+    }else{
+      $('body').addClass('dark-mode');
+      $('.main-header').addClass('navbar-dark');
+      $('.main-header').removeClass('navbar-white');
+      $('.main-sidebar').removeClass('sidebar-light-info');
+      $('.main-sidebar').addClass('sidebar-dark-info');
+      dark_mode = 1;
+    }
+
+    $.ajax({
+    type: 'POST',
+    url: '{{route("cms::toggle.dark-mode")}}',
+    data: { dark_mode: dark_mode, _token: '{{csrf_token()}}' },
+    success: function(data) {
+        console.log(data);
+    }
+});
+  });
+  
 </script>

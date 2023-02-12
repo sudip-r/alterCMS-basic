@@ -3,13 +3,16 @@
 @section('content')
 <div class="login-box">
   <!-- /.login-logo -->
-  <div class="card card-outline card-primary">
-    <div class="card-header text-center">
+  <div class="__header_box">
+    <div class="__login_box_header text-center">
       <a href="javascript:void(0);" class="h1"><b>Alter</b>CMS</a>
     </div>
-    <div class="card-body">
       <p class="login-box-msg">{{ __('Sign in to start your session') }}</p>
-
+    <hr>
+  </div>
+  <div class="__login_box">
+      <div class="__login_box_body">
+    
       <form method="POST" action="{{ route('post.alter.login') }}">
         @csrf
         <div class="input-group mb-3">
@@ -56,12 +59,17 @@
       </form>
 
       <p class="mb-1">
-        <a href="forgot-password.html">{{ __('I forgot my password') }}</a>
+        <a href="{{route('password.request')}}">{{ __('I forgot my password') }}</a>
       </p>
     </div>
     <!-- /.card-body -->
   </div>
   <!-- /.card -->
+  <div class="__footer_box">
+    <hr>
+    <p class="__credits">Photo Credit: <a href="https://unsplash.com/@lycansu" target="_blank">unsplash.com/@lycansu</a></p>
+    <p class="__credits">Powered by: <a href="https://alterbasestudios.com/" target="_blank">Alterbase Studios</a></p>
+  </div>
 </div>
 <!-- /.login-box -->
 @endsection

@@ -30,6 +30,7 @@ class UserRequest extends FormRequest
                    'email'    => 'required|email|unique:users',
                    'roles'    => 'required',
                    'password' => 'required|min:6|confirmed',
+                   'password_confirmation' => 'required|min:6'
                ];
                 break;
            case "PATCH" :
@@ -37,7 +38,7 @@ class UserRequest extends FormRequest
                    'name'     => 'required|max:255',
                    'email'    => 'required|email|unique:users,id,'.$this->user,
                    'roles'    => 'required',
-                   'password' => 'nullable|min:6',
+                   'password' => 'nullable|min:6|confirmed'
                ];
                break;
            default:
@@ -46,6 +47,7 @@ class UserRequest extends FormRequest
                    'email'    => 'required|email|unique:users',
                    'roles'    => 'required',
                    'password' => 'required|min:6|confirmed',
+                   'password_confirmation' => 'required|min:6'
                ];
        }
     }
