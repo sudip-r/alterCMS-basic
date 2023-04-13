@@ -1,8 +1,13 @@
 <?php
 
 use App\Http\Controllers\alterCMS\API\APIController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\alterCMS\HomeController;
+use App\Http\Controllers\alterCMS\Setting\SettingController;
+use App\Http\Controllers\alterCMS\User\RoleController;
+use App\Http\Controllers\alterCMS\User\UserController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Rap2hpoutre\LaravelLogViewer\LogViewerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,75 +18,85 @@ use Illuminate\Support\Facades\Auth;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "auth" middleware group. Now create something great!
 |
-*/
+ */
 
 /* ==================================================================================
-                            Dashboard
+Dashboard
 ===================================================================================*/
 
-$router->get('/', 'HomeController@index')->name('dashboard');
+Route::get('/', [HomeController::class, 'index'])->name('dashboard');
 
-$router->get('dashboard', 'HomeController@index')->name('adminDashboard');
+Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
 
-$router->get('logger', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+Route::get('logger', [LogViewerController::class, 'index']);
 
-$router->get('logout', function () {
-  Auth::logout();
-  return back();
+Route::get('logout', function () {
+    Auth::logout();
+    return back();
 })->name('logout');
 
 /* ==================================================================================
-                            API
+API
 ===================================================================================*/
-$router->post('/update-dark-mode', [APIController::class, 'toggleDarkMode'])->name('toggle.dark-mode');
+Route::post('/update-dark-mode', [APIController::class, 'toggleDarkMode'])->name('toggle.dark-mode');
 
 /* ==================================================================================
-                        Role Module
- ====================================================================================*/
+Role Module
+====================================================================================*/
 
-$router->get('user/roles', 'User\RoleController@index')->name('users.roles.index');
+Route::get('user/roles', [RoleController::class, 'index'])->name('users.roles.index');
 
-$router->get('user/role/create', 'User\RoleController@create')->name('users.roles.create');
+Route::get('user/role/create', [RoleController::class, 'create'])->name('users.roles.create');
 
-$router->post('user/role/store', 'User\RoleController@store')->name('users.roles.store');
+Route::post('user/role/store', [RoleController::class, 'store'])->name('users.roles.store');
 
-$router->get('user/role/edit/{role}', 'User\RoleController@edit')->name('users.roles.edit');
+Route::get('user/role/edit/{role}', [RoleController::class, 'edit'])->name('users.roles.edit');
 
-$router->patch('user/role/update/{role}', 'User\RoleController@update')->name('users.roles.update');
+Route::patch('user/role/update/{role}', [RoleController::class, 'update'])->name('users.roles.update');
 
-$router->get('user/roles/permissions/{role}', 'User\RoleController@permissions')->name('users.roles.permissions');
+Route::get('user/roles/permissions/{role}', [RoleController::class, 'permissions'])->name('users.roles.permissions');
 
-$router->post('user/roles/permission/update/{role}', 'User\RoleController@updatePermissions')->name('users.roles.permissions.update');
-
-/* ==================================================================================
-                        User Module
- ====================================================================================*/
-
-$router->get('users', 'User\UserController@index')->name('users.index');
-
-$router->get('users/create', 'User\UserController@create')->name('users.create');
-
-$router->post('users/store', 'User\UserController@store')->name('users.store');
-
-$router->get('users/edit/{user}', 'User\UserController@edit')->name('users.edit');
-
-$router->patch('users/update/{user}', 'User\UserController@update')->name('users.update');
-
-$router->get('user/verification/check/{token}', 'User\UserController@verify')->name('users.verification.check');
-
+Route::post('user/roles/permission/update/{role}', [RoleController::class, 'updatePermissions'])->name('users.roles.permissions.update');
 
 /* ==================================================================================
-                        Category Module
- ====================================================================================*/
+User Module
+====================================================================================*/
 
-//  $router->get('categories', 'Category\CategoryController@index')->name('categories.index');
+Route::get('users', [UserController::class, 'index'])->name('users.index');
 
-// $router->get('categories/add', 'Category\CategoryController@create')->name('categories.create');
+Route::get('users/create', [UserController::class, 'create'])->name('users.create');
 
-// $router->get('categories/edit/{category}', 'Category\CategoryController@edit')->name('categories.edit');
+Route::post('users/store', [UserController::class, 'store'])->name('users.store');
 
-// $router->delete('categories/delete/{category}', 'Category\CategoryController@delete')->name('categories.delete');
+Route::get('users/edit/{user}', [UserController::class, 'edit'])->name('users.edit');
 
-// $router->patch('categories/update/{category}', 'Category\CategoryController@update')->name('categories.update');
+Route::patch('users/update/{user}', [UserController::class, 'update'])->name('users.update');
 
-// $router->post('categories/store','Category\CategoryController@store')->name('categories.store');
+Route::get('user/verification/check/{token}', [UserController::class, 'verify'])->name('users.verification.check');
+
+/* ==================================================================================
+Setting Module
+====================================================================================*/
+Route::get('profile/user-setting', [SettingController::class, 'setting'])->name('profile.setting');
+
+Route::patch('profile/user-setting/{setting}', [SettingController::class, 'updateSetting'])->name('profile.setting.update');
+
+Route::get('messages', [SettingController::class, 'messages'])->name('messages.message');
+
+Route::patch('message/{message}', [SettingController::class, 'sendMessage'])->name('messages.message.send');
+
+/* ==================================================================================
+Category Module
+====================================================================================*/
+
+//  Route::get('categories', 'Category\CategoryController@index')->name('categories.index');
+
+// Route::get('categories/add', 'Category\CategoryController@create')->name('categories.create');
+
+// Route::get('categories/edit/{category}', 'Category\CategoryController@edit')->name('categories.edit');
+
+// Route::delete('categories/delete/{category}', 'Category\CategoryController@delete')->name('categories.delete');
+
+// Route::patch('categories/update/{category}', 'Category\CategoryController@update')->name('categories.update');
+
+// Route::post('categories/store','Category\CategoryController@store')->name('categories.store');

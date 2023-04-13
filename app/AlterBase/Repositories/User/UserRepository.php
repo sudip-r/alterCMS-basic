@@ -12,8 +12,20 @@ class UserRepository extends Repository
      *
      * @return String
      */
-    function getModel()
+    public function getModel()
     {
         return 'App\AlterBase\Models\User\User';
+    }
+
+    /**
+     * Get all admin users
+     * 
+     * @return Collection
+     */
+    public function getAllAdmin()
+    {
+        return $this->model->from('users')
+            ->where('guard', 'web')
+            ->get();
     }
 }

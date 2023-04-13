@@ -11,7 +11,9 @@ class PermissionTableSeeder extends Seeder
      * @var array
      */
     protected $modules = [
-      \App\AlterBase\Permissions\UserPermission::class
+      \App\AlterBase\Permissions\UserPermission::class,
+      \App\AlterBase\Permissions\SettingPermission::class,
+      // \App\AlterBase\Permissions\MessagePermission::class,
     ];
     /**
      * Run the database seeds.
@@ -22,6 +24,7 @@ class PermissionTableSeeder extends Seeder
     {
       DB::statement('SET FOREIGN_KEY_CHECKS=0');
       DB::table('permissions')->truncate();
+      DB::table('modules')->truncate();
       DB::statement('SET FOREIGN_KEY_CHECKS=1');       
 
       foreach($this->modules as $module){

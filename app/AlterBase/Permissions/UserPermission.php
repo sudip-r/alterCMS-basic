@@ -9,9 +9,9 @@ class UserPermission
 {
     protected $permissions = [
         'module' => [
-            'name' => 'Users Management',
+            'name' => 'Users',
             'slug' => 'cms::users',
-            'description' => 'User management module',
+            'description' => 'Users Management',
             'icon_class' => 'fa-users'
         ],
         'actions' => [

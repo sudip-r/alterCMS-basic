@@ -59,8 +59,16 @@
         $menu = 'menu-is-opening menu-open';
         }
         @endphp
+        @if($module->slug == "cms::users")
+        <li class="nav-header">{{$module->description}}</li>
+        @endif
+
+        @if($module->slug == "cms::settings")
+        <li class="nav-header">{{$module->description}}</li>
+        @endif
+        
         <li class="nav-item {{ $menu }}">
-          <a href="#" class="nav-link {{ $current }}">
+          <a href="javascript:void(0);" class="nav-link {{ $current }}">
             <i class="nav-icon fas {!! $module->icon_class !!}"></i>
             <p>{!! $module->name !!} <i class="right fas fa-angle-right"></i></p>
           </a>

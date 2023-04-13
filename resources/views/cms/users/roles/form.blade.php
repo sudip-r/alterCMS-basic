@@ -1,11 +1,11 @@
 <div class="card-body">
   <div class="form-group">
     {!! Form::label('name','Name') !!}
-    {!! Form::text('name',null,['class' => 'form-control','id' => 'news-title', 'placeholder' => "Enter News title"]) !!}
+    {!! Form::text('name',null,['class' => 'form-control','id' => 'role-title', 'placeholder' => "Title of role"]) !!}
   </div>
   <div class="form-group">
     {!! Form::label('description','Description') !!}
-    {!! Form::textarea('description',null,['class' => 'form-control','id' => 'email-id']) !!}
+    {!! Form::textarea('description',null,['class' => 'form-control']) !!}
   </div>
 
 </div>

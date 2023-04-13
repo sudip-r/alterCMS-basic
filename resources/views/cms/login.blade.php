@@ -14,7 +14,7 @@
 
   <style>
     body{
-      background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('{{asset("cms/dist/img/bg/".rand(1,14).".jpg")}}') center center no-repeat;
+      background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('{{asset("cms/dist/img/bg/".rand(1,18).".jpg")}}') center center no-repeat;
       background-size: cover;
     }
   </style>

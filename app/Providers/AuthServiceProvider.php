@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\AlterBase\Models\User\Role;
 use App\AlterBase\Models\User\User;
+use App\AlterBase\Models\Setting\Message;
 use App\Policies\RolePolicy;
 use App\Policies\UserPolicy;
+use App\Policies\SettingPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -19,7 +21,8 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
       'App\Model' => 'App\Policies\ModelPolicy',
       User::class => UserPolicy::class,
-      Role::class => RolePolicy::class
+      Role::class => RolePolicy::class,
+      Message::class => SettingPolicy::class
     ];
 
     /**

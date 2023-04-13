@@ -55,6 +55,12 @@ class RouteServiceProvider extends ServiceProvider
         ->namespace('App\Http\Controllers\alterCMS')
         ->group(base_path('routes/cms.php'));
 
+      Route::prefix('cms-api')
+        ->as('api::')
+        ->middleware(['web', 'auth:web'])
+        ->namespace('App\Http\Controllers\alterCMS\API')
+        ->group(base_path('routes/cms-api.php'));
+
       Route::prefix('business')
         ->as('business::')
         ->middleware(['web', 'auth:business'])

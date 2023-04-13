@@ -5,6 +5,7 @@ namespace App\Http\Controllers\alterCMS\User;
 use App\AlterBase\Models\User\User;
 use App\AlterBase\Repositories\User\RoleRepository;
 use App\AlterBase\Repositories\User\UserRepository;
+use App\AlterBase\Repositories\User\UserSettingRepository;
 use App\AlterBase\Services\UserVerification;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
@@ -12,6 +13,7 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Psr\Log\LoggerInterface;
+use Illuminate\Support\Facades\App;
 
 /**
  * Class UserController
@@ -27,6 +29,10 @@ class UserController extends Controller
      * @var UserVerification
      */
     private $userVerification;
+    /**
+     * @var UserSettingRepository 
+     */
+    private $setting;
     /**
      * @var LoggerInterface
      */
@@ -44,14 +50,16 @@ class UserController extends Controller
      * UserController constructor.
      * @param UserRepository $user
      * @param RoleRepository $role
+     * @param UserSettingRepository $setting
      * @param UserVerification $userVerification
      * @param LoggerInterface $log
      * @param DatabaseManager $db
      */
-    public function __construct(UserRepository $user, RoleRepository $role, UserVerification $userVerification, LoggerInterface $log, DatabaseManager $db)
+    public function __construct(UserRepository $user, RoleRepository $role, UserSettingRepository $setting, UserVerification $userVerification, LoggerInterface $log, DatabaseManager $db)
     {
         $this->user = $user;
         $this->userVerification = $userVerification;
+        $this->setting = $setting;
         $this->log = $log;
         $this->role = $role;
         $this->db = $db;
@@ -113,11 +121,17 @@ class UserController extends Controller
                 $input['profile_image'] = $this->uploadImage($request);
             }
             $input['verified'] = true;
+
+            $input['guard'] = "web";
+
             $user = $this->user->store($input);
+
+            $this->setting->store(['user_id' => $user->id, 'dark_mode' => 0]);
 
             $user->roles()->sync($request->roles);
 
-            // $this->userVerification->sendVerificationEmail($user);
+            if(App::environment('production'))
+                $this->userVerification->sendVerificationEmail($user);
 
             $this->db->commit();
 

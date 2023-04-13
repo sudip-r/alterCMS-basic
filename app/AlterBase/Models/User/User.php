@@ -2,6 +2,7 @@
 
 namespace App\AlterBase\Models\User;
 
+use App\AlterBase\Models\Setting\Message;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -36,6 +37,8 @@ class User extends Authenticatable
   protected $hidden = [
     'password', 'remember_token',
   ];
+
+  protected $appends = ['image'];
 
   /**
    * @param $password
@@ -128,4 +131,30 @@ class User extends Authenticatable
   {
     return $this->hasOne(UserSetting::class, 'user_id', 'id');
   }
+
+  /**
+   * User has many messages
+   * 
+   * @return \Illuminate\Database\Eloquent\Relations\HasMany
+   */
+  public function inbox()
+  {
+    return $this->hasMany(Message::class, 'user_id');
+  }
+
+  /**
+   * Get user profile image
+   * 
+   * @return String
+   */
+  public function getImageAttribute()
+  {
+    if($this->profile_image == "user.png")
+      return mpath('cms/dist/img/user.png');
+
+    return mpath('uploads/users/'.$this->profile_image);
+  }
+
+
+
 }
